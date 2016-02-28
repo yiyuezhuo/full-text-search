@@ -32,15 +32,35 @@ def match(path,keyword):
     f=open(path,'r')
     s=f.read()
     f.close()
-    return s in keyword
+    return keyword in s
     
-def search(root,keyword):
+def search(root,keyword,full_path=False):
     pl=get_all_path(root)
     rl=filter(lambda path:match(path,keyword),pl)
-    return [p[len(root):] for p in rl]
+    if full_path:
+        return [p for p in rl]
+    else:
+        return [p[len(root):] for p in rl]
+    
+def context_get(root,keyword,left=10,right=10,show=True):
+    path_l=search(root,keyword,full_path=True)
+    s_l=[]
+    for path in path_l:
+        f=open(path)
+        s=f.read()
+        f.close()
+        index=s.index(keyword)
+        s_l.append(s[max(0,index-left):min(len(s),index+right)])
+    if show:
+        for i in range(len(path_l)):
+            print '* '*20
+            print path_l[i]
+            print '* '*20
+            print s_l[i]
+    else:
+        return {path_l[i]:s_l[i] for i in range(len(path_l))}
     
 #pl=get_all_path(r'C:\Users\yiyuezhuo\Anaconda\Lib\site-packages\statsmodels')
 #rl=filter(lambda path:match(path,'Omnibus'),pl)
     
 #search(r'C:\Users\yiyuezhuo\Anaconda\Lib\site-packages\statsmodels','Omnibus')
-    
