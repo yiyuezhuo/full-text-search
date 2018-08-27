@@ -17,7 +17,7 @@ def fork(path_list):
         elif os.path.isdir(path):
             dir_list.append(path)
         else:
-            print 'can not identify',path
+            print('can not identify',path)
     return dir_list,file_list
 
 def get_all_path(root):
@@ -29,9 +29,8 @@ def get_all_path(root):
     return rl
     
 def match(path,keyword):
-    f=open(path,'r')
-    s=f.read()
-    f.close()
+    with open(path) as f:
+        s = f.read()
     return keyword in s
     
 def search(root,keyword,full_path=False):
@@ -46,17 +45,16 @@ def context_get(root,keyword,left=10,right=10,show=True):
     path_l=search(root,keyword,full_path=True)
     s_l=[]
     for path in path_l:
-        f=open(path)
-        s=f.read()
-        f.close()
+        with open(path) as f:
+            s = f.read()
         index=s.index(keyword)
         s_l.append(s[max(0,index-left):min(len(s),index+right)])
     if show:
         for i in range(len(path_l)):
-            print '* '*20
-            print path_l[i]
-            print '* '*20
-            print s_l[i]
+            print('* '*20)
+            print(path_l[i])
+            print('* '*20)
+            print(s_l[i])
     else:
         return {path_l[i]:s_l[i] for i in range(len(path_l))}
     
